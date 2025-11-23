@@ -1,0 +1,29 @@
+How I started Loki:
+- docker run -d --name loki -p 3100:3100 grafana/loki:2.8.2
+
+How I verified Loki:
+- curl -G "http://localhost:3100/loki/api/v1/labels"
+  (Output: {"status":"success"})
+
+How I started Promtail:
+- Created monitoring/promtail-config.yaml
+- docker run -d --name promtail \
+    -v /var/lib/docker/containers:/var/lib/docker/containers:ro \
+    -v /var/log:/var/log:ro \
+    -v $(pwd)/monitoring/promtail-config.yaml:/etc/promtail/promtail.yaml \
+    grafana/promtail:2.8.2
+
+How I verified Promtail:
+- docker ps | grep promtail
+  (Promtail container running)
+
+How I viewed logs:
+- nomad alloc logs <alloc_id>     # Nomad container logs
+- docker logs promtail            # Promtail service logs
+- curl -G "http://localhost:3100/loki/api/v1/labels"  # Loki API check
+
+Notes:
+- Loki stores logs.
+- Promtail forwards container logs to Loki.
+- Grafana (optional) can visualize logs.
+
