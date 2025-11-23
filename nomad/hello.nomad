@@ -3,15 +3,18 @@ job "hello" {
   type = "service"
 
   group "hello-group" {
+    network {
+      port "http" {
+        static = 8090
+      }
+    }
+
     task "hello-task" {
       driver = "docker"
 
       config {
         image = "abinaya216/hello-devops:latest"
-        # if you pushed to Docker Hub, use e.g. "youruser/hello-devops:latest"
-        port_map {
-          http = 8080
-        }
+        ports = ["http"]
       }
 
       resources {
